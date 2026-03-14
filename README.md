@@ -26,7 +26,7 @@ result = client.detect_gaps(prior_results: {
 
 # Manually generate a wonder
 wonder = client.generate_wonder(
-  question: "How does Consul ACL token inheritance work?",
+  question: 'How does Consul ACL token inheritance work?',
   domain: :consul,
   gap_type: :incomplete
 )
@@ -35,9 +35,16 @@ wonder = client.generate_wonder(
 client.explore_wonder(wonder_id: wonder[:wonder_id])
 client.resolve_wonder(
   wonder_id: wonder[:wonder_id],
-  resolution: "Child tokens inherit parent policy",
+  resolution: 'Child tokens inherit parent policy',
   actual_gain: 0.8
 )
+
+# Get the curiosity-driven agenda
+client.form_agenda
+# => { agenda_items: [{ type: :curious, summary: "...", weight: 0.7 }], source: :curiosity }
+
+# Decay salience over time
+client.decay_wonders(hours_elapsed: 1.0)
 ```
 
 ## Gap Types
@@ -47,13 +54,13 @@ client.resolve_wonder(
 | `:unknown` | Domain with no memory traces |
 | `:uncertain` | Low-confidence predictions |
 | `:contradictory` | Conflicting memory traces |
-| `:incomplete` | Partial pattern matches |
+| `:incomplete` | Partial pattern matches or weak traces |
 
 ## Integration
 
-Wires into two previously-unwired tick phases:
+Wires into lex-tick phases:
 - `working_memory_integration` → `detect_gaps`
-- `agenda_formation` → `form_agenda` (dream cycle)
+- `agenda_formation` → `form_agenda`
 
 ## Development
 
